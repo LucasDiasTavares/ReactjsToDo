@@ -22,14 +22,21 @@ class App extends Component {
     }
 
     fetchTasks() {
-        console.log('Fetching...');
         fetch('https://lucas-to-do-api.herokuapp.com/api/task-list/')
             .then(response => response.json())
-            .then(data => console.log('Data', data)
+            .then(data =>
+                this.setState({
+                    todoList: data
+                })
             )
     }
 
     render() {
+
+        var tasks = this.state.todoList
+        console.log(tasks);
+
+
         return (
             <div className="container">
                 <div id="task-container">
@@ -47,7 +54,23 @@ class App extends Component {
                         </form>
                     </div>
                     <div id="list-wrapper">
+                        {tasks.map((task, index) =>
+                            <div key={index} className="task-wrapper d-flex">
 
+                                <div style={{ flex: 7 }}>
+                                    <span>{task.title}</span>
+                                </div>
+
+                                <div style={{ flex: 1 }}>
+                                    <button className='btn btn-sm btn-outline-primary'>Editar</button>
+                                </div>
+
+                                <div style={{ flex: 1 }}>
+                                    <button className='btn btn-sm btn-outline-danger'>Excluir</button>
+                                </div>
+
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
