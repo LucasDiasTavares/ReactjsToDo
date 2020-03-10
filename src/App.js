@@ -3,6 +3,32 @@ import './App.css';
 
 class App extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            todoList: [],
+            activeItem: {
+                id: null,
+                title: '',
+                completed: false
+            },
+            editing: false,
+        }
+        this.fetchTasks = this.fetchTasks.bind(this)
+    };
+
+    componentWillMount() {
+        this.fetchTasks()
+    }
+
+    fetchTasks() {
+        console.log('Fetching...');
+        fetch('https://lucas-to-do-api.herokuapp.com/api/task-list/')
+            .then(response => response.json())
+            .then(data => console.log('Data', data)
+            )
+    }
+
     render() {
         return (
             <div className="container">
