@@ -61,9 +61,24 @@ class App extends Component {
         })
     }
 
+    startEditing(task) {
+        this.setState({
+            activeItem: task,
+            editing: true
+        })
+    }
+
     handleSubmit(event) {
         event.preventDefault()
-        const url = 'https://lucas-to-do-api.herokuapp.com/api/task-create/'
+        var url = ''
+
+        if (this.state.editing === true) {
+            var url = `https://lucas-to-do-api.herokuapp.com/api/task-update/${this.state.activeItem.id}/`
+            this.setState({ editing: false })
+        } else {
+            var url = 'https://lucas-to-do-api.herokuapp.com/api/task-create/'
+        }
+
         const crsftoken = this.getCookie('crsftoken')
         fetch(url, {
             method: 'POST',
@@ -124,7 +139,7 @@ class App extends Component {
                                 </div>
 
                                 <div style={{ flex: 1 }}>
-                                    <button className='btn btn-sm btn-outline-primary'>Editar</button>
+                                    <button onClick={() => this.startEditing(task)} className='btn btn-sm btn-outline-primary'>Editar</button>
                                 </div>
 
                                 <div style={{ flex: 1 }}>
