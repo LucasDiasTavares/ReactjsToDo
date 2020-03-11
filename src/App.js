@@ -18,6 +18,8 @@ class App extends Component {
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.getCookie = this.getCookie.bind(this)
+        this.startEditing = this.startEditing.bind(this)
+        this.deleteTask = this.deleteTask.bind(this)
     };
 
     getCookie(name) {
@@ -68,6 +70,20 @@ class App extends Component {
         })
     }
 
+    deleteTask(task) {
+        const crsftoken = this.getCookie('crsftoken')
+
+        fetch(`https://lucas-to-do-api.herokuapp.com/api/task-delete/${task.id}/`, {
+            method: 'DELETE',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': crsftoken,
+            },
+        }).then((response) => {
+            this.fetchTasks()
+        })
+    }
+
     handleSubmit(event) {
         event.preventDefault()
         var url = ''
@@ -104,6 +120,7 @@ class App extends Component {
     render() {
 
         var tasks = this.state.todoList
+        var this2 = this
 
         return (
             <div className="container">
@@ -139,11 +156,11 @@ class App extends Component {
                                 </div>
 
                                 <div style={{ flex: 1 }}>
-                                    <button onClick={() => this.startEditing(task)} className='btn btn-sm btn-outline-primary'>Editar</button>
+                                    <button onClick={() => this2.startEditing(task)} className='btn btn-sm btn-outline-primary'>Editar</button>
                                 </div>
 
                                 <div style={{ flex: 1 }}>
-                                    <button className='btn btn-sm btn-outline-danger'>X</button>
+                                    <button onClick={() => this2.deleteTask(task)} className='btn btn-sm btn-outline-danger'>X</button>
                                 </div>
 
                             </div>
