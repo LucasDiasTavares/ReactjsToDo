@@ -1,6 +1,7 @@
 body {
     background: rgb(210, 176, 0);
     background: radial-gradient(circle, rgba(210, 176, 0, 0.6558823358444941) 60%, rgba(0, 57, 241, 0.5018207111946341) 70%);
+    background-repeat: no-repeat;
 }
 
 #task-container {

@@ -15,7 +15,26 @@ class App extends Component {
             editing: false,
         }
         this.fetchTasks = this.fetchTasks.bind(this)
+        this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+        this.getCookie = this.getCookie.bind(this)
     };
+
+    getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
     componentWillMount() {
         this.fetchTasks()
@@ -31,24 +50,67 @@ class App extends Component {
             )
     }
 
+    handleChange(event) {
+        const value = event.target.value
+
+        this.setState({
+            activeItem: {
+                ...this.state.activeItem,
+                title: value
+            }
+        })
+    }
+
+    handleSubmit(event) {
+        event.preventDefault()
+        const url = 'https://lucas-to-do-api.herokuapp.com/api/task-create/'
+        const crsftoken = this.getCookie('crsftoken')
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': crsftoken,
+            },
+            body: JSON.stringify(this.state.activeItem)
+        }).then((response) => {
+            this.fetchTasks()
+            this.setState({
+                activeItem: {
+                    id: null,
+                    title: '',
+                    completed: false
+                }
+            })
+        }).catch((err) => console.log(err)
+        )
+
+    }
+
     render() {
 
         var tasks = this.state.todoList
-        console.log(tasks);
-
 
         return (
             <div className="container">
                 <div id="task-container">
                     <div id="form-wrapper">
-                        <form id="form">
+                        <form id="form" onSubmit={this.handleSubmit}>
                             <div className="d-flex">
                                 <div style={{ flex: 6 }}>
-                                    <input className="form-control" id="title" type="text" name="title" placeholder="Adicionar tarefa" />
+                                    <input onChange={this.handleChange}
+                                        className="form-control"
+                                        id="title" type="text"
+                                        name="title"
+                                        placeholder="Adicionar tarefa"
+                                        value={this.state.activeItem.title}
+                                    />
                                 </div>
 
                                 <div style={{ flex: 1 }}>
-                                    <input id="submit" className="btn btn-warning" type="submit" name="Add" />
+                                    <input id="submit"
+                                        className="btn btn-warning"
+                                        type="submit"
+                                        name="Add" />
                                 </div>
                             </div>
                         </form>
@@ -66,7 +128,7 @@ class App extends Component {
                                 </div>
 
                                 <div style={{ flex: 1 }}>
-                                    <button className='btn btn-sm btn-outline-danger'>Excluir</button>
+                                    <button className='btn btn-sm btn-outline-danger'>X</button>
                                 </div>
 
                             </div>
