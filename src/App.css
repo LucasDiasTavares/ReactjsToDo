@@ -1,7 +1,10 @@
+html {
+    width: 100%;
+    height: 100%;
+}
+
 body {
-    background: rgb(210, 176, 0);
-    background: radial-gradient(circle, rgba(210, 176, 0, 0.6558823358444941) 60%, rgba(0, 57, 241, 0.5018207111946341) 70%);
-    background-repeat: no-repeat;
+    background: linear-gradient(0deg, rgba(210, 176, 0, 0.5998599268809086) 0%, rgba(0, 57, 241, 0.6026610473290879) 100%);
 }
 
 #task-container {

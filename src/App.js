@@ -20,6 +20,7 @@ class App extends Component {
         this.getCookie = this.getCookie.bind(this)
         this.startEditing = this.startEditing.bind(this)
         this.deleteTask = this.deleteTask.bind(this)
+        this.strikeUnstrike = this.strikeUnstrike.bind(this)
     };
 
     getCookie(name) {
@@ -117,6 +118,27 @@ class App extends Component {
 
     }
 
+    strikeUnstrike(task) {
+        task.completed = !task.completed
+        const crsftoken = this.getCookie('crsftoken')
+        var url = `https://lucas-to-do-api.herokuapp.com/api/task-update/${task.id}/`
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json',
+                'X-CSRFToken': crsftoken,
+            },
+            body: JSON.stringify({ 'title': task.title, 'completed': task.completed })
+        }).then(() => {
+            this.fetchTasks()
+        })
+
+        console.log(task.completed);
+
+
+    }
+
     render() {
 
         var tasks = this.state.todoList
@@ -149,10 +171,13 @@ class App extends Component {
                     </div>
                     <div id="list-wrapper">
                         {tasks.map((task, index) =>
-                            <div key={index} className="task-wrapper d-flex">
+                            <div onClick={() => this2.strikeUnstrike(task)} key={index} className="task-wrapper d-flex">
 
                                 <div style={{ flex: 7 }}>
-                                    <span>{task.title}</span>
+                                    {task.completed == false
+                                        ? <span>{task.title}</span>
+                                        : <strike>{task.title}</strike>
+                                    }
                                 </div>
 
                                 <div style={{ flex: 1 }}>
